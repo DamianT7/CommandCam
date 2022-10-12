@@ -1,0 +1,7 @@
+*.suo
+*.user
+Debug/*
+CommandCam/Debug/*
+*.pdb
+Photos
+.vs

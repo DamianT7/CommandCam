@@ -27,6 +27,9 @@
 
 // DirectShow header file
 #include <dshow.h>
+#include <iostream>
+#include <ctime>
+#include <string.h>
 
 // This is a workaround for the missing header
 // file qedit.h which seems to be absent from the
@@ -92,13 +95,13 @@ void exit_message(const char* error_message, int error)
 int main(int argc, char **argv)
 {
 	// Capture settings
-	int snapshot_delay = 2000;
+	int snapshot_delay = 0;
 	int show_preview_window = 0;
 	int list_devices = 0;
 	int device_number = 1;
 	char device_name[100];
 	char filename[100];
-	
+
 	// Other variables
 	char char_buffer[100];
 
@@ -106,18 +109,7 @@ int main(int argc, char **argv)
 	strcpy(device_name, "");
 	strcpy(filename, "image.bmp");
 	
-	// Information message
-	fprintf(stderr, "\n");
-	fprintf(stderr, "CommandCam  Copyright (C) 2012  Ted Burke\n");
-    fprintf(stderr, "This program comes with ABSOLUTELY NO WARRANTY;\n");
-    fprintf(stderr, "This is free software, and you are welcome to\n");
-    fprintf(stderr, "redistribute it under certain conditions;\n");
-	fprintf(stderr, "See the GNU General Public License v3,\n");
-	fprintf(stderr, "<http://www.gnu.org/licenses/gpl.txt>\n");
-	fprintf(stderr, "\n");
-	fprintf(stderr, "http://batchloaf.wordpress.com\n");
-	fprintf(stderr, "This version 21-4-2012\n");
-	fprintf(stderr, "\n");
+
 	
 	// Parse command line arguments. Available options:
 	//
@@ -128,6 +120,7 @@ int main(int argc, char **argv)
 	//		/preview
 	//		/devlist
 	//
+
 	int n = 1;
 	while (n < argc)
 	{
@@ -159,6 +152,23 @@ int main(int argc, char **argv)
 				else
 				{
 					strcpy(filename, char_buffer);
+					
+					// idegani: add a timestamp in the filename if it contains wildcard {TS}
+					char *ts = strstr(filename, "{TS}");
+					if(ts != 0) {
+						char temp[100];
+						time_t rawtime;
+						struct tm * timeinfo;
+						size_t  dateLen;
+
+						time (&rawtime);
+						timeinfo = localtime(&rawtime);
+						strcpy(temp, ts + strlen("{TS}"));
+						// TODO: might be nice to have another cmd line arg where format can be specified
+						dateLen = strftime(ts, 80,"%Y-%m-%d_%H-%M-%S", timeinfo);
+						strcpy(ts + dateLen, temp);
+						int i = 4;
+					}
 				}
 			}
 			else exit_message("Error: no filename specified", 1);
