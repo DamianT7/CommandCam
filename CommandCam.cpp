@@ -109,7 +109,12 @@ int main(int argc, char **argv)
 	strcpy(device_name, "");
 	strcpy(filename, "image.bmp");
 	
-
+	// Information message
+	fprintf(stderr, "\n");
+	fprintf(stderr, "Starting CommandCam\n");
+	fprintf(stderr, "Loading custom version by Damian Teske\n");
+	fprintf(stderr, "CHEEEEEEEEEEESE!!\n");
+	fprintf(stderr, "\n");
 	
 	// Parse command line arguments. Available options:
 	//
